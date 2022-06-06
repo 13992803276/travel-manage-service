@@ -20,7 +20,7 @@ public class KafkaSender {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    private Gson gson = new GsonBuilder().create();
+    private final Gson gson = new GsonBuilder().create();
 
     public String send(String msg) {
         Message message = new Message();
@@ -29,7 +29,6 @@ public class KafkaSender {
         message.setMsg(msg);
         message.setSendTime(LocalDate.now());
         log.info("【++++++++++++++++++ message ：{}】", gson.toJson(message));
-        //对 topic =  refund 的发送消息
         kafkaTemplate.send("refund", gson.toJson(message));
         return message.getMsg();
     }
