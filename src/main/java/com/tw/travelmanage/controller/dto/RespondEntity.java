@@ -4,6 +4,7 @@ package com.tw.travelmanage.controller.dto;
  * @author lexu
  */
 
+import com.tw.travelmanage.constant.RespondStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

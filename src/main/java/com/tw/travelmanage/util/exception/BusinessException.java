@@ -1,6 +1,6 @@
 package com.tw.travelmanage.util.exception;
 
-import com.tw.travelmanage.controller.dto.RespondStatus;
+import com.tw.travelmanage.constant.RespondStatus;
 
 /**
  * @author lexu

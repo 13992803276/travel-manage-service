@@ -1,7 +1,7 @@
 package com.tw.travelmanage.controller.advice;
 
 import com.tw.travelmanage.controller.dto.RespondEntity;
-import com.tw.travelmanage.controller.dto.RespondStatus;
+import com.tw.travelmanage.constant.RespondStatus;
 import com.tw.travelmanage.util.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

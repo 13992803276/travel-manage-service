@@ -1,4 +1,4 @@
-package com.tw.travelmanage.infrastructure.mqService.kafka;
+package com.tw.travelmanage.infrastructure.mqService.mqEntity;
 
 import lombok.Data;
 

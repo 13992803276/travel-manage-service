@@ -8,6 +8,7 @@ CREATE TABLE travel_user (
                            `created` date DEFAULT NULL,
                            `name` varchar(255) DEFAULT NULL,
                            `phone` varchar(255) DEFAULT NULL,
+                           `company` varchar(255) DEFAULT NULL,
                            `status` varchar(255) DEFAULT NULL,
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
