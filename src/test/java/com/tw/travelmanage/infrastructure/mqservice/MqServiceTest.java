@@ -1,3 +1,4 @@
+
 package com.tw.travelmanage.infrastructure.mqservice;
 
 import com.tw.travelmanage.infrastructure.mqService.kafka.KafkaSender;
@@ -24,23 +25,23 @@ public class MqServiceTest {
     KafkaSender kafkaSender;
 
     @Mock
-    private  KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Captor
     ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @Test
-    public void test_mq_service_sender_can_receive_correct_parameters(){
-        kafkaSender.send("a invoice info message is send successful","invoice");
-        verify(kafkaTemplate,times(1)).send(any(),argumentCaptor.capture());
+    public void test_mq_service_sender_can_receive_correct_parameters() {
+        kafkaSender.send("a invoice info message is send successful", "invoice");
+        verify(kafkaTemplate, times(1)).send(any(), argumentCaptor.capture());
         String value = argumentCaptor.getValue();
         Assertions.assertTrue(value.contains("a invoice info message is send successful"));
     }
 
     @Test
-    public void test_mq_sender_should_return_message_after_send_messages(){
-        Mockito.when(kafkaTemplate.send(anyString(),any())).thenReturn(null);
-        String message = kafkaSender.send("message","invoice");
-        Assertions.assertEquals(message,"message");
+    public void test_mq_sender_should_return_message_after_send_messages() {
+        Mockito.when(kafkaTemplate.send(anyString(), any())).thenReturn(null);
+        String message = kafkaSender.send("message", "invoice");
+        Assertions.assertEquals(message, "message");
     }
 }

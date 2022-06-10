@@ -1,3 +1,4 @@
+
 package com.tw.travelmanage.infrastructure.repository;
 
 import com.tw.travelmanage.infrastructure.repository.entity.FixedStatement;
@@ -36,4 +37,5 @@ public class FixedStatementRepositoryTest {
         Assertions.assertEquals(BigDecimal.valueOf(100), fixedStatementData.getAmount());
         Assertions.assertEquals("建设银行", fixedStatementData.getBeneBankName());
     }
+
 }
