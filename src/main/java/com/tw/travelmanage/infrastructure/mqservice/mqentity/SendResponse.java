@@ -1,4 +1,4 @@
-package com.tw.travelmanage.infrastructure.mqService.mqentity;
+package com.tw.travelmanage.infrastructure.mqservice.mqentity;
 
 /**
  * @author lexu

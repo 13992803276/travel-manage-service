@@ -1,7 +1,7 @@
 
 package com.tw.travelmanage.infrastructure.mqservice;
 
-import com.tw.travelmanage.infrastructure.mqService.kafka.KafkaSender;
+import com.tw.travelmanage.infrastructure.mqservice.kafka.KafkaSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

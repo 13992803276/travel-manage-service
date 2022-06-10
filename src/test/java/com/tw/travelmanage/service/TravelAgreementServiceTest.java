@@ -4,7 +4,7 @@ import com.tw.travelmanage.controller.dto.FixedFeeDto;
 import com.tw.travelmanage.infrastructure.httpInterface.FixedChargeService;
 import com.tw.travelmanage.infrastructure.httpInterface.InvoiceApplyService;
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.FixedChargeResponse;
-import com.tw.travelmanage.infrastructure.mqService.kafka.KafkaSender;
+import com.tw.travelmanage.infrastructure.mqservice.kafka.KafkaSender;
 import com.tw.travelmanage.infrastructure.repository.FixedStatementRepository;
 import com.tw.travelmanage.infrastructure.repository.InvoiceRepository;
 import com.tw.travelmanage.infrastructure.repository.entity.FixedStatement;

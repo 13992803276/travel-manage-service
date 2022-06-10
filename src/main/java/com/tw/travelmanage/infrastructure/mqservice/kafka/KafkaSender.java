@@ -1,8 +1,8 @@
-package com.tw.travelmanage.infrastructure.mqService.kafka;
+package com.tw.travelmanage.infrastructure.mqservice.kafka;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.tw.travelmanage.infrastructure.mqService.mqentity.Message;
+import com.tw.travelmanage.infrastructure.mqservice.mqentity.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

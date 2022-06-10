@@ -1,6 +1,6 @@
-package com.tw.travelmanage.infrastructure.mqService.kafka;
+package com.tw.travelmanage.infrastructure.mqservice.kafka;
 
-import com.tw.travelmanage.infrastructure.mqService.mqentity.ConsumerResponse;
+import com.tw.travelmanage.infrastructure.mqservice.mqentity.ConsumerResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
