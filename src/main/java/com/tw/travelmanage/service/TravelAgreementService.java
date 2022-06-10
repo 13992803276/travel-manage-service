@@ -5,8 +5,10 @@ import com.tw.travelmanage.constant.RespondStatus;
 import com.tw.travelmanage.controller.dto.FixedFeeDto;
 import com.tw.travelmanage.controller.dto.InvoiceDto;
 import com.tw.travelmanage.infrastructure.httpInterface.FixedChargeService;
+import com.tw.travelmanage.infrastructure.httpInterface.InvoiceApplyService;
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.FixedChargeRequest;
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.FixedChargeResponse;
+import com.tw.travelmanage.infrastructure.httpInterface.httpentity.InvoiceData;
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.InvoiceResponse;
 import com.tw.travelmanage.infrastructure.mqService.kafka.KafkaSender;
 import com.tw.travelmanage.infrastructure.repository.FixedStatementRepository;
@@ -35,6 +37,8 @@ public class TravelAgreementService {
 
     @Autowired
     FixedChargeService fixedChargeService;
+    @Autowired
+    InvoiceApplyService invoiceApplyService;
     @Autowired
     KafkaSender kafkaSender;
     @Autowired
@@ -98,14 +102,23 @@ public class TravelAgreementService {
         return codeTemp;
     }
 
-    public String applyInvoice(InvoiceDto invoiceDto) {
-        kafkaSender.send(invoiceDto.toString(), "invoice");
+    public String applyInvoice(Integer fixedId, InvoiceDto invoiceDto) {
+        FixedStatement fixedStatement = fixedStatementRepository.getFixedStatementById(fixedId);
+        if(!PayStatus.PAID_SUCCESS.getCode().equals(fixedStatement.getPayStatus())){
+            throw new BusinessException(RespondStatus.PARAM_ERROR);
+        }
+        InvoiceResponse invoiceResponse = invoiceApplyService.applyInvoice(null);
+        if(RespondStatus.ERROR.getCode().equals(invoiceResponse.getCode())){
+            kafkaSender.send(invoiceDto.toString(), "invoice");
+        } else {
+            saveInvoiceData(invoiceResponse.getData());
+        }
+
         return RespondStatus.SUCCESS.getCode();
     }
 
-    public String saveInvoiceData(InvoiceResponse invoiceResponse) {
-        Invoice invoice = MapStruct.invoiceResponseToInvoice(invoiceResponse);
+    public void saveInvoiceData(InvoiceData invoiceData) {
+        Invoice invoice = MapStruct.invoiceDataToInvoice(invoiceData);
         invoiceRepository.save(invoice);
-        return "success";
     }
 }

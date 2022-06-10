@@ -1,6 +1,7 @@
 package com.tw.travelmanage.util.mapstruct;
 
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.FixedChargeRequest;
+import com.tw.travelmanage.infrastructure.httpInterface.httpentity.InvoiceData;
 import com.tw.travelmanage.infrastructure.httpInterface.httpentity.InvoiceResponse;
 import com.tw.travelmanage.infrastructure.repository.entity.FixedStatement;
 import com.tw.travelmanage.infrastructure.repository.entity.Invoice;
@@ -22,15 +23,15 @@ public class MapStruct {
                 .build();
     }
 
-    public static Invoice invoiceResponseToInvoice(InvoiceResponse invoiceResponse) {
+    public static Invoice invoiceDataToInvoice(InvoiceData invoiceData) {
         return Invoice.builder()
-                .amount(invoiceResponse.getAmount())
-                .invoiceDate(invoiceResponse.getInvoiceDate())
-                .invoiceName(invoiceResponse.getInvoiceName())
-                .payerAddress(invoiceResponse.getPayerAddress())
-                .payerBankNo(invoiceResponse.getPayerBankNo())
-                .saleBankNo(invoiceResponse.getSaleBankNo())
-                .saleTaxNo(invoiceResponse.getSaleTaxNo())
+                .amount(invoiceData.getAmount())
+                .invoiceDate(invoiceData.getInvoiceDate())
+                .invoiceName(invoiceData.getInvoiceName())
+                .payerAddress(invoiceData.getPayerAddress())
+                .payerBankNo(invoiceData.getPayerBankNo())
+                .saleBankNo(invoiceData.getSaleBankNo())
+                .saleTaxNo(invoiceData.getSaleTaxNo())
                 .build();
     }
 }
