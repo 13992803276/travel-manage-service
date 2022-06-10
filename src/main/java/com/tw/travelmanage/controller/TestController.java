@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value ="/hello")
 @Api(tags = "测试接口")
-public class HelloController {
+public class TestController {
     @GetMapping(value ="/test")
     public String test(){
-        return "hello world";
+        return "connection is success";
     }
 }
