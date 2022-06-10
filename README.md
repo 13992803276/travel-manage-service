@@ -65,8 +65,6 @@ Run the application which will be listening on port `8080`.
 ### Fake Repository test
 
 Repository test are build with H2 database
-
-1.import H2 dependency in pom.xml
 ```
     <dependency>
         <groupId>com.h2database</groupId>
@@ -74,129 +72,15 @@ Repository test are build with H2 database
         <scope>runtime</scope>
     </dependency>
 ```
-2.creat a sql file for initiating H2 database table at test/resources/db/migration folder;
-```
-    **creat_travel_user.sql**
-   DROP TABLE IF EXISTS travel_user;
-    CREATE TABLE travel_user (
-                               `id` int NOT NULL AUTO_INCREMENT,
-                               `account` varchar(255) DEFAULT NULL,
-                               `address` varchar(255) DEFAULT NULL,
-                               `balance` decimal(19,2) DEFAULT NULL,
-                               `bank_no` varchar(255) DEFAULT NULL,
-                               `created` date DEFAULT NULL,
-                               `name` varchar(255) DEFAULT NULL,
-                               `phone` varchar(255) DEFAULT NULL,
-                               `status` varchar(255) DEFAULT NULL,
-                               PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
-        
-    **insert_rent_user_data.sql**
-    INSERT INTO RENT_ROOM.`rent_user`
-        (id,account, address, balance, created, name, phone, status)
-    VALUES
-       (1,'wuhen001', '陕西省西安市', 100.00, '2022-02-12', '徐乐', '13992809276', '1');
 
-    INSERT INTO RENT_ROOM.`rent_user`
-        (id,account, address, balance, created, name, phone, status)
-    VALUES
-         (2,'xiaociacai', '陕西省西安市', 0.00, '2022-02-12', '高小五', '18792721645', '1');
-
-    INSERT INTO RENT_ROOM.`rent_user`
-        (id,account, address, balance, created, name, phone, status)
-    VALUES
-        (3,'zhangsan', '北京市海淀区', 8.00, '2022-02-12', '张三', '18999388847', '0');
-```
-3.creat RentUserRepositoryTest for testing RentUserRepository's getRentUserById() and save() method;
-
-    RentUserRepositoryTest must be creat with a '@SpringbootTest' annotation
 ###Code struct
 ```
-src
-├── main
-│ ├── java
-│ │ └── com
-│ │     └── tw
-│ │         └── precharge
-│ │             ├── PrechargeServiceApplication.java
-│ │             ├── constant
-│ │             │ ├── PayStatus.java
-│ │             │ ├── RefundStatus.java
-│ │             │ └── UserStatus.java
-│ │             ├── controller
-│ │             │ ├── ChargeController.java
-│ │             │ ├── HelloController.java
-│ │             │ ├── advice
-│ │             │ │ └── ExceptionHandlerAdvice.java
-│ │             │ ├── configuration
-│ │             │ │ ├── FeignConfiguration.java
-│ │             │ │ └── SwaggerConfig.java
-│ │             │ └── dto
-│ │             │     ├── ChargeDTO.java
-│ │             │     ├── RefundDTO.java
-│ │             │     ├── RespondEntity.java
-│ │             │     ├── RespondStatus.java
-│ │             │     ├── WeChatPayResDTO.java
-│ │             │     └── WechatPayDTO.java
-│ │             ├── domain
-│ │             │ ├── rentinfo
-│ │             │ │ └── RoomRentInfo.java
-│ │             │ └── user
-│ │             │     └── RentUser.java
-│ │             ├── entity
-│ │             │ ├── Chargement.java
-│ │             │ └── Refundment.java
-│ │             ├── infrastructure
-│ │             │ ├── httpInterface
-│ │             │ │ ├── WechatPayClient.java
-│ │             │ │ └── WechatService.java
-│ │             │ ├── mqService
-│ │             │ │ └── kafka
-│ │             │ │     ├── KafkaConsumer.java
-│ │             │ │     ├── KafkaSender.java
-│ │             │ │     └── Message.java
-│ │             │ └── repository
-│ │             │     ├── ChargementRepository.java
-│ │             │     ├── RefundmentRepository.java
-│ │             │     └── RentUserRepository.java
-│ │             ├── service
-│ │             │ └── ChargeService.java
-│ │             └── util
-│ │                 └── exception
-│ │                     └── BusinessException.java
-│ └── resources
-│     ├── application.properties
-│     └── db
-│         └── migration
-│             ├── V20220418230923__creat__rent__user.sql
-│             └── V20220419213143__insert__rent__user.sql
-└── test
-    ├── java
-    │ └── com
-    │     └── tw
-    │         └── precharge
-    │             ├── PrechargeServiceApplicationTests.java
-    │             ├── controllerTest
-    │             │ └── ChargeControllerTest.java
-    │             ├── httpInterfaceTest
-    │             │ └── WechatPayClientTest.java
-    │             ├── mqTest
-    │             │ └── MqServiceTest.java
-    │             ├── repositoryTest
-    │             │ ├── ChargementRepositoryTest.java
-    │             │ ├── RefundmentRepositoryTest.java
-    │             │ └── RentUserRepositoryTest.java
-    │             └── serviceTest
-    │                 └── ChargeServiceTest.java
-    └── resources
-        ├── application-test.properties
-        └── db
-            └── migration
-                ├── V20220418230923__creat__rent__user.sql
-                └── V20220419213143__insert__rent__user.sql
 
 ```
-
+### swagger url
+```
+    http://localhost:8080/swagger-ui.html#/
+```
 ### Comment
 
 The class 'KafkaConsumer' is the 3rd system service, 

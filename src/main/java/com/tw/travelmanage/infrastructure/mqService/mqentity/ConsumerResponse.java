@@ -1,4 +1,4 @@
-package com.tw.travelmanage.infrastructure.mqService.mqEntity;
+package com.tw.travelmanage.infrastructure.mqService.mqentity;
 
 import lombok.Builder;
 import lombok.Data;
