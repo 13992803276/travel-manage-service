@@ -2,15 +2,13 @@ package com.tw.travelmanage.infrastructure.repository;
 
 import com.tw.travelmanage.infrastructure.repository.entity.TravelUser;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author lexu
  */
+@Repository
 public interface TravelUserRepository extends JpaRepository<TravelUser, Integer> {
 
-    TravelUser getTravelUserById(Integer userId);
-
-    List<TravelUser> getAll();
+    TravelUser findTravelUserById(Integer Id);
 }

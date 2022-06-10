@@ -18,7 +18,6 @@ import com.tw.travelmanage.infrastructure.repository.entity.Invoice;
 import com.tw.travelmanage.service.datamodel.PayFixFeeDataModel;
 import com.tw.travelmanage.util.exception.BusinessException;
 import com.tw.travelmanage.util.mapstruct.MapStruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,36 +30,47 @@ import java.time.LocalDateTime;
  */
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class TravelAgreementService {
 
-
-    private final FixedChargeService fixedChargeService;
-    private final InvoiceApplyService invoiceApplyService;
-    private final KafkaSender kafkaSender;
-    private final FixedStatementRepository fixedStatementRepository;
-    private final InvoiceRepository invoiceRepository;
+    @Autowired
+    FixedChargeService fixedChargeService;
+    @Autowired
+    InvoiceApplyService invoiceApplyService;
+    @Autowired
+    KafkaSender kafkaSender;
+    @Autowired
+    FixedStatementRepository fixedStatementRepository;
+    @Autowired
+    InvoiceRepository invoiceRepository;
     private static final Integer RETRY_TIMES = 3;
 
+    public TravelAgreementService(FixedChargeService fixedChargeService, InvoiceApplyService invoiceApplyService, KafkaSender kafkaSender, FixedStatementRepository fixedStatementRepository, InvoiceRepository invoiceRepository) {
+        this.invoiceApplyService = invoiceApplyService;
+        this.fixedStatementRepository = fixedStatementRepository;
+        this.fixedChargeService = fixedChargeService;
+        this.kafkaSender = kafkaSender;
+        this.invoiceRepository = invoiceRepository;
+    }
 
     @Transactional(rollbackOn = Exception.class)
     public PayFixFeeDataModel payFixedFees(FixedFeeDto fixedFeeDto) {
-        FixedStatement fixedStatementEntity = fixedStatementRepository.getFixedStatementById(fixedFeeDto.getFixedFeeId());
+        FixedStatement fixedStatementEntity = fixedStatementRepository.findFixedStatementById(fixedFeeDto.getFixedFeeId());
         if (PayStatus.STAY_PAY.getCode().equals(fixedStatementEntity.getPayStatus())) {
+            FixedChargeResponse fixedChargeResponse = new FixedChargeResponse();
             FixedChargeRequest fixedChargeRequest = MapStruct.fixedStatementToFixedChargeRequest(fixedStatementEntity);
-            FixedChargeResponse fixedChargeResponse = fixedChargeService.payment(fixedChargeRequest);
-            log.info("the charge result is {}", fixedChargeResponse);
-            if (RespondStatus.SUCCESS.getCode().equals(fixedChargeResponse.getCode())) {
+            String chargeResult = doCharge(fixedChargeRequest);
+            log.info("first charge result is {}", chargeResult);
+            if (!RespondStatus.SUCCESS.getCode().equals(chargeResult)) {
+                chargeResult = cycleCharge(fixedChargeRequest);
+            }
+            log.info("the chargeResult is {} ", chargeResult);
+
+            if (RespondStatus.SUCCESS.getCode().equals(chargeResult)) {
                 saveFixedStatement(fixedStatementEntity);
-            } else if (RespondStatus.BALANCE_ERROR.getCode().equals(fixedChargeResponse.getCode())) {
+            } else if (RespondStatus.BALANCE_ERROR.getCode().equals(chargeResult)) {
                 throw new BusinessException(RespondStatus.BALANCE_ERROR);
-            } else if (RespondStatus.ERROR.getCode().equals(fixedChargeResponse.getCode())) {
-                String code = cycleCharge(fixedChargeRequest);
-                if (RespondStatus.SUCCESS.getCode().equals(code)) {
-                    saveFixedStatement(fixedStatementEntity);
-                } else {
-                    throw new BusinessException(RespondStatus.ERROR);
-                }
+            } else {
+                throw new BusinessException(RespondStatus.ERROR);
             }
         } else {
             throw new BusinessException(RespondStatus.DOUBLE_PAYMENT);
@@ -79,20 +89,31 @@ public class TravelAgreementService {
         fixedStatementRepository.save(fixedStatementDataModel);
     }
 
-    private String cycleCharge(FixedChargeRequest fixedChargeRequest) {
-        String codeTemp = RespondStatus.ERROR.getCode();
-        for (int i = 0; i < RETRY_TIMES; i++) {
-            FixedChargeResponse charge = fixedChargeService.payment(fixedChargeRequest);
-            if (RespondStatus.SUCCESS.getCode().equals(charge.getCode())) {
-                codeTemp = RespondStatus.SUCCESS.getCode();
-                break;
+    private String doCharge(FixedChargeRequest fixedChargeRequest) {
+        String chargeResult = "";
+        try {
+            FixedChargeResponse fixedChargeResponse = fixedChargeService.payment(fixedChargeRequest);
+            if (RespondStatus.SUCCESS.getCode().equals(fixedChargeResponse.getCode())) {
+                chargeResult = RespondStatus.SUCCESS.getCode();
+            } else if (RespondStatus.BALANCE_ERROR.getCode().equals(fixedChargeResponse.getCode())) {
+                chargeResult = RespondStatus.BALANCE_ERROR.getCode();
             }
+        } catch (Exception exception) {
+            chargeResult = RespondStatus.ERROR.getCode();
         }
-        return codeTemp;
+        return chargeResult;
+    }
+
+    private String cycleCharge(FixedChargeRequest fixedChargeRequest) {
+        String tempResult = "";
+        for (int i = 0; i < RETRY_TIMES; i++) {
+            tempResult = doCharge(fixedChargeRequest);
+        }
+        return tempResult;
     }
 
     public String applyInvoice(Integer fixedId, InvoiceDto invoiceDto) {
-        FixedStatement fixedStatement = fixedStatementRepository.getFixedStatementById(fixedId);
+        FixedStatement fixedStatement = fixedStatementRepository.findFixedStatementById(fixedId);
         if (!PayStatus.PAID_SUCCESS.getCode().equals(fixedStatement.getPayStatus())) {
             throw new BusinessException(RespondStatus.PARAM_ERROR);
         }

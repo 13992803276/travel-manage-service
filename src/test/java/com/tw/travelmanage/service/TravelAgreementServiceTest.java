@@ -25,16 +25,19 @@ import static org.mockito.ArgumentMatchers.any;
 class TravelAgreementServiceTest {
 
     private FixedChargeService fixedChargeService;
+    private InvoiceApplyService invoiceApplyService;
+    private KafkaSender kafkaSender;
     private FixedStatementRepository fixedStatementRepository;
+    private InvoiceRepository invoiceRepository;
     private TravelAgreementService travelAgreementService;
 
     @BeforeEach
     public void setup() {
         fixedChargeService = Mockito.mock(FixedChargeService.class);
-        InvoiceApplyService invoiceApplyService = Mockito.mock(InvoiceApplyService.class);
-        KafkaSender kafkaSender = Mockito.mock(KafkaSender.class);
+        invoiceApplyService = Mockito.mock(InvoiceApplyService.class);
+        kafkaSender = Mockito.mock(KafkaSender.class);
         fixedStatementRepository = Mockito.mock(FixedStatementRepository.class);
-        InvoiceRepository invoiceRepository = Mockito.mock(InvoiceRepository.class);
+        invoiceRepository = Mockito.mock(InvoiceRepository.class);
         travelAgreementService = new TravelAgreementService(fixedChargeService, invoiceApplyService,
                 kafkaSender, fixedStatementRepository, invoiceRepository);
     }
@@ -43,7 +46,7 @@ class TravelAgreementServiceTest {
     public void given_stay_payed_fixed_fee_when_pay_should_be_return_success() {
         FixedFeeDto fixedFeeDto = FixedFeeDto.builder().fixedFeeId(1).build();
         FixedStatement fixedStatementMock = getFixedStatementEntityMock("0");
-        Mockito.when(fixedStatementRepository.getFixedStatementById(any())).thenReturn(fixedStatementMock);
+        Mockito.when(fixedStatementRepository.findFixedStatementById(any())).thenReturn(fixedStatementMock);
         Mockito.when(fixedChargeService.payment(any())).thenReturn(FixedChargeResponse.builder().code("200").message("success").build());
         PayFixFeeDataModel payFixFeeDataModel = travelAgreementService.payFixedFees(fixedFeeDto);
         Assertions.assertEquals("2", payFixFeeDataModel.getPayStatus());
@@ -53,10 +56,8 @@ class TravelAgreementServiceTest {
     public void given_payed_success_fixed_fee_when_pay_should_be_return_double_payed_exception() {
         FixedFeeDto fixedFeeDto = FixedFeeDto.builder().fixedFeeId(1).build();
         FixedStatement fixedStatementMock = getFixedStatementEntityMock("2");
-        Mockito.when(fixedStatementRepository.getFixedStatementById(any())).thenReturn(fixedStatementMock);
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            travelAgreementService.payFixedFees(fixedFeeDto);
-        }, "the payment has payed");
+        Mockito.when(fixedStatementRepository.findFixedStatementById(any())).thenReturn(fixedStatementMock);
+        BusinessException exception = assertThrows(BusinessException.class, () -> travelAgreementService.payFixedFees(fixedFeeDto), "the payment has payed");
         Assertions.assertEquals("402", exception.getRs().getCode());
         Assertions.assertTrue(exception.getRs().getMessage().contains("the payment has payed"));
     }
@@ -65,11 +66,9 @@ class TravelAgreementServiceTest {
     public void given_stay_payed_fixed_fee_when_charge_client_error_should_be_return_system_error_exception() {
         FixedFeeDto fixedFeeDto = FixedFeeDto.builder().fixedFeeId(1).build();
         FixedStatement fixedStatementMock = getFixedStatementEntityMock("0");
-        Mockito.when(fixedStatementRepository.getFixedStatementById(any())).thenReturn(fixedStatementMock);
+        Mockito.when(fixedStatementRepository.findFixedStatementById(any())).thenReturn(fixedStatementMock);
         Mockito.when(fixedChargeService.payment(any())).thenReturn(FixedChargeResponse.builder().code("500").message("system error").build());
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            travelAgreementService.payFixedFees(fixedFeeDto);
-        }, "system error");
+        BusinessException exception = assertThrows(BusinessException.class, () -> travelAgreementService.payFixedFees(fixedFeeDto), "system error");
         Assertions.assertEquals("500", exception.getRs().getCode());
         Assertions.assertTrue(exception.getRs().getMessage().contains("system error"));
     }
@@ -78,11 +77,9 @@ class TravelAgreementServiceTest {
     public void given_stay_payed_fixed_fee_when_remitBank_money_not_enough_should_be_return_business_error_exception() {
         FixedFeeDto fixedFeeDto = FixedFeeDto.builder().fixedFeeId(1).build();
         FixedStatement fixedStatementMock = getFixedStatementEntityMock("0");
-        Mockito.when(fixedStatementRepository.getFixedStatementById(any())).thenReturn(fixedStatementMock);
+        Mockito.when(fixedStatementRepository.findFixedStatementById(any())).thenReturn(fixedStatementMock);
         Mockito.when(fixedChargeService.payment(any())).thenReturn(FixedChargeResponse.builder().code("401").message("the balance is not enough").build());
-        BusinessException exception = assertThrows(BusinessException.class, () -> {
-            travelAgreementService.payFixedFees(fixedFeeDto);
-        }, "the balance is not enough");
+        BusinessException exception = assertThrows(BusinessException.class, () -> travelAgreementService.payFixedFees(fixedFeeDto), "the balance is not enough");
         Assertions.assertEquals("401", exception.getRs().getCode());
         Assertions.assertTrue(exception.getRs().getMessage().contains("the balance is not enough"));
     }

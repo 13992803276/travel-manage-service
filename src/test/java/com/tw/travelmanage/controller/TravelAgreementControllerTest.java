@@ -28,6 +28,7 @@ public class TravelAgreementControllerTest {
 
     @Autowired
     MockMvc mockMvc ;
+
     @MockBean
     TravelAgreementService travelAgreementService;
 
