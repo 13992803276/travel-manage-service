@@ -12,6 +12,7 @@ public enum RespondStatus {
     SUCCESS("200", "success"),
     PARAM_ERROR("400", "params is error"),
     BALANCE_ERROR("401", "the balance is not enough"),
+    DOUBLE_PAYMENT("402", "the payment has payed"),
     ERROR("505", "system error");
 
     private final String code;

@@ -23,14 +23,14 @@ public class KafkaSender {
 
     private final Gson gson = new GsonBuilder().create();
 
-    public String send(String msg) {
+    public String send(String msg ,String topic) {
         Message message = new Message();
 
         message.setId(System.currentTimeMillis());
         message.setMsg(msg);
         message.setSendTime(LocalDate.now());
         log.info("【++++++++++++++++++ message ：{}】", gson.toJson(message));
-        kafkaTemplate.send("refund", gson.toJson(message));
+        kafkaTemplate.send(topic, gson.toJson(message));
         return message.getMsg();
     }
 

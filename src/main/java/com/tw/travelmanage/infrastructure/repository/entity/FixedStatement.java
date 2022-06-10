@@ -38,6 +38,8 @@ public class FixedStatement {
     private BigDecimal amount;
     private LocalDateTime remitTime;
     private String title;
+    private String beneficiary;
+    private String remittance;
     private String payStatus;
     @CreatedDate
     private LocalDate created;

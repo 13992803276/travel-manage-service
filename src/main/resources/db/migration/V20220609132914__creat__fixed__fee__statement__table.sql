@@ -10,6 +10,8 @@ CREATE TABLE fixed_statement (
                              `remit_time` varchar(255) DEFAULT NULL,
                              `created` date DEFAULT NULL,
                              `title` varchar(255) DEFAULT NULL,
+                             `beneficiary` varchar(255) DEFAULT NULL,
+                             `remittance` varchar(255) DEFAULT NULL,
                              `pay_status` varchar(255) DEFAULT NULL,
                              PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;

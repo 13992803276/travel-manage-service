@@ -14,7 +14,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class KafkaConsumer {
-    @KafkaListener(topics = {"refund"})
+    @KafkaListener(topics = {"invoice"})
     public ConsumerResponse listen(ConsumerRecord<?, ?> record) {
         Optional.ofNullable(record.value())
                 .ifPresent(message -> {
