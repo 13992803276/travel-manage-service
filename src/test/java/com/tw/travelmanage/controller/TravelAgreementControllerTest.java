@@ -40,7 +40,7 @@ public class TravelAgreementControllerTest {
             .build();
 
     @Test
-    public void given_a_stayPay_fixed_statement_when_success_should_return_200() throws Exception {
+    public void given_a_stayPay_fixed_statement_when_success_should_be_return_200() throws Exception {
         Mockito.when(travelAgreementService.payFixedFees(any())).thenReturn(payFixFeeDataModel);
         mockMvc.perform(post("http://localhost:8080/travel_service_contract/fixedfee/12")
                         .content("")
@@ -64,7 +64,7 @@ public class TravelAgreementControllerTest {
     }
 
     @Test
-    public void given_a_stayPay_fixed_statement_when_double_payed_should_be_return_401() throws Exception {
+    public void given_a_payed_fixed_statement_when_double_payed_should_be_return_409() throws Exception {
         Mockito.when(travelAgreementService.payFixedFees(any())).thenThrow(new BusinessException(RespondStatus.DOUBLE_PAYMENT));
         mockMvc.perform(post("http://localhost:8080/travel_service_contract/fixedfee/12")
                         .content("")

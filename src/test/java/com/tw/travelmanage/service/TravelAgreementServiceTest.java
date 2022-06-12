@@ -78,9 +78,9 @@ class TravelAgreementServiceTest {
         FixedFeeDto fixedFeeDto = FixedFeeDto.builder().fixedFeeId(1).build();
         FixedStatement fixedStatementMock = getFixedStatementEntityMock("0");
         Mockito.when(fixedStatementRepository.findFixedStatementById(any())).thenReturn(fixedStatementMock);
-        Mockito.when(fixedChargeService.payment(any())).thenReturn(FixedChargeResponse.builder().code("401").message("the balance is not enough").build());
+        Mockito.when(fixedChargeService.payment(any())).thenReturn(FixedChargeResponse.builder().code("409").message("the balance is not enough").build());
         BusinessException exception = assertThrows(BusinessException.class, () -> travelAgreementService.payFixedFees(fixedFeeDto), "the balance is not enough");
-        Assertions.assertEquals("401", exception.getRs().getCode());
+        Assertions.assertEquals("409", exception.getRs().getCode());
         Assertions.assertTrue(exception.getRs().getMessage().contains("the balance is not enough"));
     }
 

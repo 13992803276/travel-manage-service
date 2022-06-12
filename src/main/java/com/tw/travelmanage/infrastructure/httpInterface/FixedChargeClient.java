@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author lexu
  */
-@FeignClient(name = "bank-payment-service", configuration = FeignConfiguration.class, url = "https://xx.xx.com/pay-charge")
+@FeignClient(name = "bank-payment-service", configuration = FeignConfiguration.class, url = "https://xx.xx.com/transfer")
 public interface FixedChargeClient {
-    @PostMapping(value = "/v1/bank/charge")
+    @PostMapping(value = "/charge")
     FixedChargeResponse payment(@RequestBody FixedChargeRequest fixedChargeRequest);
 }
