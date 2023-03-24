@@ -10,3 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 }
+
+
