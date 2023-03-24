@@ -22,7 +22,6 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                // 为当前包路径
                 .apis(RequestHandlerSelectors.basePackage("com.tw.travelmanage.controller"))
                 .paths(PathSelectors.any())
                 .build();
@@ -30,12 +29,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                // 页面标题
                 .title("RESTful API")
-                // 创建人信息
-                // 版本号
                 .version("1.0")
-                // 描述
                 .description("API 描述")
                 .build();
     }
