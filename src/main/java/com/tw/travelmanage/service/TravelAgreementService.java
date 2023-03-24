@@ -90,7 +90,8 @@ public class TravelAgreementService {
     }
 
     private String doCharge(FixedChargeRequest fixedChargeRequest) {
-        String chargeResult = "";//test
+        String chargeResult = "";
+        //test
         try {
             FixedChargeResponse fixedChargeResponse = fixedChargeService.payment(fixedChargeRequest);
             if (RespondStatus.SUCCESS.getCode().equals(fixedChargeResponse.getCode())) {
