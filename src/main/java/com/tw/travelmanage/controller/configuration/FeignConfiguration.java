@@ -15,9 +15,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @ConditionalOnClass(Feign.class)
-@AutoConfigureBefore(FeignAutoConfiguration.class)public class FeignConfiguration {
+@AutoConfigureBefore(FeignAutoConfiguration.class)
+public class FeignConfiguration {
     @Bean
-    public okhttp3.OkHttpClient okHttpClient(){
+    public okhttp3.OkHttpClient okHttpClient() {
         return new okhttp3.OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -25,5 +26,4 @@ import java.util.concurrent.TimeUnit;
                 .connectionPool(new ConnectionPool())
                 .build();
     }
-
 }

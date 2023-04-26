@@ -14,7 +14,7 @@ public class InvoiceApplyService {
     @Autowired
     InvoiceClient invoiceClient;
 
-    public InvoiceResponse applyInvoice(InvoiceRequest invoiceRequest){
+    public InvoiceResponse applyInvoice(InvoiceRequest invoiceRequest) {
         return invoiceClient.applyInvoice(invoiceRequest);
     }
 }
